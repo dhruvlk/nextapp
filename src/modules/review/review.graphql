@@ -1,0 +1,44 @@
+directive @isAuthenticated on FIELD_DEFINITION
+directive @hasRole(roles: [String]) on FIELD_DEFINITION
+
+type Query {
+  review(filter: ReviewFilter!):ReviewResponse @hasRole(roles: ["ADMIN"])
+}
+
+type Mutation {
+  createReview(data: ReviewInput): ReviewCreateResponse @isAuthenticated
+}
+
+type Review {
+  id: ID!,
+  userId: ID,
+  feedback: String
+}
+
+input ReviewFilter {
+  skip: Int
+  limit: Int
+  search: String
+  sortBy: String
+}
+
+input ReviewInput { 
+  feedback: String
+}
+
+type ReviewCreateResponse {
+  message: String
+}
+
+type ReviewListing {
+   id:ID,
+  userId:ID,
+  feedback: String
+}
+
+type ReviewResponse {
+  count: Int
+  review: [ReviewListing]
+}
+
+
