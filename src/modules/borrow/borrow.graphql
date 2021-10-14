@@ -1,0 +1,52 @@
+directive @isAuthenticated on FIELD_DEFINITION
+directive @hasRole(roles: [String]) on FIELD_DEFINITION
+
+type Query {
+  borrows(filter: BorrowFilter!):BorrowResponse @hasRole(roles: ["ADMIN"])
+}
+
+type Mutation {
+  createBorrow(data: BorrowInput!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
+  updateBorrow(data: BorrowUpdateInput!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
+  deleteBorrow(id: ID!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
+}
+
+input BorrowFilter {
+  skip: Int
+  limit: Int
+  search: String
+  sortBy: String
+}
+
+type BorrowCreateUpdateDeleteResponse {
+  message: String
+}
+
+input BorrowInput { 
+  issueDate: Date
+  returnDate: Date
+  bookId: ID
+  userId:ID
+  status: String
+}
+
+input BorrowUpdateInput {
+  id:ID!
+  issueDate: Date
+  returnDate: Date
+  status: String
+}
+
+type BorrowListing {
+  id: ID!
+  issueDate: Date
+  returnDate: Date
+  expiryDate: Date
+  fineAmount: Int,
+  status: String,
+}
+
+type BorrowResponse {
+  count: Int
+  borrows: [BorrowListing]
+}
