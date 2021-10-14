@@ -1,0 +1,51 @@
+directive @isAuthenticated on FIELD_DEFINITION
+directive @hasRole(roles: [String]) on FIELD_DEFINITION
+
+type Query {
+  books(filter: BookFilter!): BooksResponse @hasRole(roles: ["ADMIN"])
+}
+
+type Mutation {
+  createBook(data: BookInput): BookCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
+  updateBook(data: BookUpdateInput): BookCreateUpdateDeleteResponse  @hasRole(roles: ["ADMIN"])
+  deleteBook(id: ID!): BookCreateUpdateDeleteResponse  @hasRole(roles: ["ADMIN"])
+}
+
+type BookListing {
+  id: ID!,
+  bookName: String,
+  bookAuthor: String,
+  bookEdition: String,
+  noOfCopies: Int
+}
+
+input BookInput { 
+  bookName: String,
+  bookAuthor: String,
+  bookEdition: String,
+  noOfCopies: Int
+}
+
+input BookUpdateInput {
+  id: ID!,
+  bookName: String,
+  bookAuthor: String,
+  bookEdition: String,
+  noOfCopies: Int
+}
+
+type BookCreateUpdateDeleteResponse {
+  message: String
+}
+
+input BookFilter {
+  skip: Int
+  limit: Int
+  search: String
+  sortBy: String
+}
+
+type BooksResponse {
+  count: Int
+  books: [BookListing]
+}
