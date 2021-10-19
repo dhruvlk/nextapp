@@ -3,12 +3,13 @@ directive @hasRole(roles: [String]) on FIELD_DEFINITION
 
 type Query {
   borrows(filter: BorrowFilter!):BorrowResponse @hasRole(roles: ["ADMIN"])
+  penalties(filter: penaltyFilter!):PenaltyResponse @hasRole(roles: ["ADMIN"])
 }
 
 type Mutation {
-  createBorrow(data: BorrowInput!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
-  updateBorrow(data: BorrowUpdateInput!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
-  deleteBorrow(id: ID!): BorrowCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
+  createBorrow(data: BorrowInput!): BorrowBookResponse @hasRole(roles: ["ADMIN"])
+  returnBook(data:ReturnBorrowBookInput!): BorrowBookResponse! @hasRole(roles:["ADMIN"])
+  payFine(id: ID!):BorrowBookResponse! @isAuthenticated
 }
 
 input BorrowFilter {
@@ -18,23 +19,27 @@ input BorrowFilter {
   sortBy: String
 }
 
-type BorrowCreateUpdateDeleteResponse {
+input penaltyFilter {
+  skip: Int
+  limit: Int
+  search: String
+  sortBy: String
+}
+
+type BorrowBookResponse {
   message: String
 }
 
 input BorrowInput { 
   issueDate: Date
-  returnDate: Date
   bookId: ID
   userId:ID
-  status: String
 }
 
-input BorrowUpdateInput {
-  id:ID!
-  issueDate: Date
-  returnDate: Date
-  status: String
+input ReturnBorrowBookInput {
+	userId:ID!
+	bookId:ID!
+	returnDate:Date
 }
 
 type BorrowListing {
@@ -42,11 +47,20 @@ type BorrowListing {
   issueDate: Date
   returnDate: Date
   expiryDate: Date
-  fineAmount: Int,
-  status: String,
+}
+
+type PenaltyListing {
+  id: ID
+  borrowId: ID
+  fineAmount: Int
 }
 
 type BorrowResponse {
   count: Int
   borrows: [BorrowListing]
+}
+
+type PenaltyResponse {
+  count: Int
+  penalties: [PenaltyListing]
 }
