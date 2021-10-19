@@ -20,66 +20,40 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     issueDate: {
-      type: DataTypes.DATEONLY,
-      required: true,
-      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
     },
     expiryDate: {
-      type: DataTypes.DATEONLY,
-      required: true,
-      allowNull: true,
+      type: DataTypes.DATEONLY
     },
     returnDate: {
-      type: DataTypes.DATEONLY,
-      required: true,
-      allowNull: true,
+      type: DataTypes.DATE
     },
     bookId: {
       type: DataTypes.UUID,
       required: true,
-      allowNull: false,
+      allowNull: false
     },
     userId: {
       type: DataTypes.UUID,
       required: true,
-      allowNull: false,
-    },
-    fineAmount: {
-      type: DataTypes.INTEGER,
-      required: true,
-      allowNull: true,
-    },
-    status: {
-      type: DataTypes.STRING,
-      defaultValue : "NoFine",
-      allowNull: false,
+      allowNull: false
     },
   }, {
     sequelize,
     modelName: 'Borrow',
     tableName: 'borrow',
   });
-
   Borrow.beforeCreate(async (borrow) => {
     borrow.expiryDate = moment(borrow.issueDate).add(7,'days');
-    if(moment(borrow.expiryDate).isBefore(moment(borrow.returnDate).add(0,'days')))
-    {
-        borrow.fineAmount = CONFIG.fine;
-        if(borrow.fineAmount = CONFIG.fine)
-        {
-          borrow.status = "unpaid"
-        }
-    }
-    if(!moment(borrow.expiryDate).isBefore(moment(borrow.returnDate).add(0,'days')))
-    {
-        borrow.fineAmount = 0;
-    }
+   
   });
 
   Borrow.associate = models => {
-
+    
     Borrow.belongsTo(models.User, { as: 'borrowBook', foreignKey: 'userId', targetKey: 'id' });
     Borrow.belongsTo(models.Book, { as: 'books', foreignKey: 'bookId', targetKey: 'id' });
+    Borrow.hasOne(models.Penalty, { as: 'penalty', foreignKey: 'borrowId', targetKey: 'id' });
   };
 
   return Borrow;
