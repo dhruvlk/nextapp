@@ -21,13 +21,15 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.UUID,
       required: true,
-      allowNull: false,
+    },
+    bookId: {
+      type: DataTypes.UUID,
+      required: true,
     },
     feedback: {
       type: DataTypes.STRING,
       required: true,
-      allowNull: true,
-    },
+     },
   }, {
     sequelize,
     modelName: 'Review',
@@ -36,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Review.associate = models => {
     Review.belongsTo(models.User, { as: 'userReview', foreignKey: 'userId', targetKey: 'id' });
+    Review.belongsTo(models.Book, { as: 'bookReview', foreignKey: 'bookId', targetKey: 'id' });
   };
 
   return Review;
