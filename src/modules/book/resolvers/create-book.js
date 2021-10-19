@@ -10,10 +10,6 @@ const createBook = async (_, args, ctx) => {
       Book: BookModel,
     } = ctx.models;
 
-    if (!data.bookName && !data.bookAuthor && !data.bookEdition && !data.noOfCopies) {
-      throw new ApolloError(getMessage('INVALID_DATA'));
-    }
-
     const bookData = {
       ...data
     };
