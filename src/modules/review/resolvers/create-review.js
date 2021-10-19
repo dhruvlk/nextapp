@@ -6,10 +6,19 @@ const createReview = async (_, args, ctx) => {
   try {
     const { data } = args;
     const {
+      Book: BookModel,
+      User:UserModel,
       Review: ReviewModel,
     } = ctx.models;
 
     const { user } = ctx.req;
+
+    bookInstance = BookModel.findByPk(data.bookId)
+
+    if(!bookInstance)
+    {
+      throw new ApolloError(getMessage('BOOK_NOT_FOUND'));
+    }
 
     const reviewData = {
       ...data,
@@ -20,12 +29,12 @@ const createReview = async (_, args, ctx) => {
 
     const response = {
       status: 'SUCCESS',
-      message: getMessage('BORROW_CREATE_SUCCESS'),
+      message: getMessage('REVIEW_CREATE_SUCCESS'),
     };
 
     return response;
   } catch (error) {
-    logger.error('ERROR WHILE CREATING borrowed>>>', error);
+    logger.error('ERROR WHILE CREATING review>>>', error);
     return error;
   }
 };
