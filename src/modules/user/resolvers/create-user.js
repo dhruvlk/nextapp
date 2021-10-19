@@ -1,9 +1,9 @@
-const { nanoid } = require('nanoid');
 const randomsting = require('randomstring');
 const { getMessage } = require('../../../utils/messages');
 const { generatePassword } = require('../../../utils/context');
 const logger = require('../../../logger');
 const CONFIG = require('../../../../config/config');
+const { sequelize } = require('../../../models');
 
 const createUser = async (_, args, ctx) => {
   try {
@@ -18,15 +18,15 @@ const createUser = async (_, args, ctx) => {
       role: 'USER',
     };
 
-     createDataObj.password = await generatePassword(user.password);
-     const userCount = await UserModel.count({ where: { email: createDataObj.email } });
+    createDataObj.password = await generatePassword(user.password);
+    const userCount = await UserModel.count({ where: { email: { $iLike: createDataObj.email } } });
 
     if (userCount) {
       throw new Error(getMessage('USER_EMAIL_EXISTS'));
     }
 
     await UserModel.create(createDataObj, { returning: true });
-    
+
     const response = {
       status: 'SUCCESS',
       message: getMessage('USER_CREATE_SUCCESS'),
