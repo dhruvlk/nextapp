@@ -17,7 +17,6 @@ const users = async (_, args, { models }) => {
       },
     } = args;
     const {
-      // eslint-disable-next-line no-unused-vars
       User: UserModel,
     } = models;
 

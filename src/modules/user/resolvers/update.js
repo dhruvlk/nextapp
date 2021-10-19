@@ -4,20 +4,20 @@ const { getMessage } = require('../../../utils/messages');
 
 const update = async (_, args, ctx) => {
   try {
-    const { data } = args;
+    const { id:userId,data } = args;
     const { models, req } = ctx;
     const {
       User: UserModel,
     } = models;
     const { user } = req;
 
-    const userInstance = await UserModel.findByPk(user.id);
+    const userInstance = await UserModel.findByPk(userId);
 
     if (!userInstance) {
       throw new ApolloError(getMessage('USER_NOT_FOUND'));
     }
 
-    let updatedUser = await UserModel.update(data, { where: { id: user.id }, returning: true });
+    let updatedUser = await userInstance.update(data, {returning: true });
 
     [, [updatedUser]] = updatedUser;
 

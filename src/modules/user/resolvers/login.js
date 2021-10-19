@@ -14,7 +14,7 @@ const login = async (_, args, ctx) => {
     let refreshToken;
     const JWT_SECRET = CONFIG.jwt.secret;
 
-    const user = await UserModel.findOne({ where: { email } });
+    const user = await UserModel.findOne({ where: { email: { $iLike: email } } });
 
     if (!user) {
       throw new Error(getMessage('USER_NOT_FOUND'));
