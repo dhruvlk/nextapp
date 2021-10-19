@@ -1,7 +1,8 @@
 const borrows = require('./borrows');
 const createBorrow = require('./create-borrow');
-const deleteBorrow = require('./delete-borrow');
-const updateBorrow = require('./update-borrow');
+const returnBook = require('./return-borrow-book');
+const payFine = require('./penalty');
+const penalties = require('./penalties')
 
 const resolvers = {
  
@@ -15,18 +16,26 @@ const resolvers = {
     expiryDate: {
       resolve: BorrowListing => BorrowListing.expiryDate,
     },
-    fineAmount: {
-      resolve: BorrowListing => BorrowListing.fineAmount,
-    }
     
   },
+
+  PenaltyListing: {
+    fineAmount: {
+      resolve: PenaltyListing => PenaltyListing.fineAmount,
+    },
+    borrowId: {
+      resolver: PenaltyListing => PenaltyListing.borrowId
+    }
+  },
+
   Query: {
-    borrows
+    borrows,
+    penalties
   },
   Mutation: {
     createBorrow,
-    deleteBorrow,
-    updateBorrow,
+    returnBook,
+    payFine
   },
 };
 

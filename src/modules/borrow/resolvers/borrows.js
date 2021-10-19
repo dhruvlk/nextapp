@@ -18,7 +18,7 @@ const borrows = async (_, args, { models }) => {
     } = args;
     
     let query = `
-    SELECT id, issue_date, expiry_date, return_date,fine_amount,user_id,book_id  FROM public.borrow
+    SELECT id, issue_date, expiry_date, return_date,user_id,book_id  FROM public.borrow
     WHERE deleted_at IS NULL
     `;
 
