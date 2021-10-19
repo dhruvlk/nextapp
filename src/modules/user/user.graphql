@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   createUser(user: userInput!): CreateUpdateUserResponse 
   login(data:loginData!):LoginResponse 
-  updateUser(data: UserData!): User @isAuthenticated
+  updateUser(id:ID, data: UserData): User @isAuthenticated
   updatePassword(data: passwordInput!): CreateUpdateUserResponse @isAuthenticated
   verifyUser(data: VerifyInput!): CreateUpdateUserResponse
   adminUpdate(data: AdminUpdateInput!): CreateUpdateUserResponse @hasRole(roles: ["ADMIN"])
