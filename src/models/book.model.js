@@ -52,7 +52,17 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'RESTRICT',
       hooks: true,
     });
+
+    Book.hasMany(models.Review, {
+      as: 'bookReview',
+      foreignKey: 'bookId',
+      sourceKey: 'id',
+      onDelete: 'RESTRICT',
+      hooks: true,
+    });
+  
   };
 
+ 
   return Book;
 };
