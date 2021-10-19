@@ -1,4 +1,5 @@
 const books = require('./books');
+const book = require('./book-reviewlist');
 const createBook = require('./create-book');
 const updateBook = require('./update-book');
 const deleteBook = require('./delete-book');
@@ -13,6 +14,7 @@ const resolvers = {
     },
   },
   Query: {
+    book,
     books,
   },
   Mutation: {
