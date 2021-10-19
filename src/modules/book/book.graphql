@@ -2,40 +2,49 @@ directive @isAuthenticated on FIELD_DEFINITION
 directive @hasRole(roles: [String]) on FIELD_DEFINITION
 
 type Query {
-  books(filter: BookFilter!): BooksResponse @hasRole(roles: ["ADMIN"])
+  book(id:ID!): JSON @isAuthenticated
+  books(filter: BookFilter!): BooksResponse @isAuthenticated
 }
 
 type Mutation {
   createBook(data: BookInput): BookCreateUpdateDeleteResponse @hasRole(roles: ["ADMIN"])
-  updateBook(data: BookUpdateInput): BookCreateUpdateDeleteResponse  @hasRole(roles: ["ADMIN"])
+  updateBook(id: ID!, data: BookUpdateInput): BookCreateUpdateDeleteResponse  @hasRole(roles: ["ADMIN"])
   deleteBook(id: ID!): BookCreateUpdateDeleteResponse  @hasRole(roles: ["ADMIN"])
 }
 
+type book{
+  id: ID
+  bookName: String
+  bookAuthor: String
+  bookEdition: String
+  Review: [Review!]
+}
+
 type BookListing {
-  id: ID!,
-  bookName: String,
-  bookAuthor: String,
-  bookEdition: String,
+  id: ID!
+  bookName: String
+  bookAuthor: String
+  bookEdition: String
   noOfCopies: Int
 }
 
 input BookInput { 
-  bookName: String,
-  bookAuthor: String,
-  bookEdition: String,
+  bookName: String
+  bookAuthor: String
+  bookEdition: String
   noOfCopies: Int
 }
 
 input BookUpdateInput {
-  id: ID!,
-  bookName: String,
-  bookAuthor: String,
-  bookEdition: String,
+  bookName: String
+  bookAuthor: String
+  bookEdition: String
   noOfCopies: Int
 }
 
 type BookCreateUpdateDeleteResponse {
-  message: String
+  message: String,
+   data:[book]
 }
 
 input BookFilter {
