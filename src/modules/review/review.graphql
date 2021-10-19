@@ -9,10 +9,18 @@ type Mutation {
   createReview(data: ReviewInput): ReviewCreateResponse @isAuthenticated
 }
 
+type ReviewUser{
+  id: ID
+  firstName: String
+  lastName: String
+  }
+
 type Review {
-  id: ID!,
-  userId: ID,
+  id: ID
+  userId: ID
   feedback: String
+  bookId: ID
+  user: [ReviewUser]
 }
 
 input ReviewFilter {
@@ -24,6 +32,7 @@ input ReviewFilter {
 
 input ReviewInput { 
   feedback: String
+  bookId: ID
 }
 
 type ReviewCreateResponse {
@@ -31,8 +40,9 @@ type ReviewCreateResponse {
 }
 
 type ReviewListing {
-   id:ID,
-  userId:ID,
+  id:ID
+  userId:ID
+  bookId:ID
   feedback: String
 }
 
