@@ -10,9 +10,6 @@ const deleteBook = async (_, args, ctx) => {
     const { id } = args;
     const {
       Book: BookModel,
-     /* postLike: PostLikeModel,
-      Comment: CommentModel,
-      CommentLike: CommentLikeModel,*/
     } = ctx.models;
     const { user } = ctx.req;
 
@@ -24,15 +21,6 @@ const deleteBook = async (_, args, ctx) => {
       throw new ApolloError(getMessage('BOOK_NOT_FOUND'));
     }
 
-    if  (user.role !== 'ADMIN') {
-      throw new ApolloError(getMessage('UNAUTHORIZED'));
-    }
-
-    /*let commentIds = await CommentModel.findAll({ where: { postId: id } });
-    commentIds = map(commentIds, 'id');
-    await CommentLikeModel.destroy({ where: { commentId: { $in: commentIds } }, transaction });
-    await CommentModel.destroy({ where: { postId: id }, transaction });
-    await PostLikeModel.destroy({ where: { postId: id }, transaction });*/
     await BookModel.destroy({ where: { id }, transaction });
 
     await transaction.commit();

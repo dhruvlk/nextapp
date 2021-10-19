@@ -7,20 +7,18 @@ const allowedData = ['bookName', 'bookAuthor', 'bookEdition', 'noOfCopies'];
 
 const updateBook = async (_, args, ctx) => {
   try {
-    const { data } = args;
+    const { id:bookId, data } = args;
     const {
       Book: BookModel,
     } = ctx.models;
     
-    const bookInstance = await BookModel.findByPk(data.id);
+    const bookInstance = await BookModel.findByPk(bookId);
 
     if (!bookInstance) {
       throw new ApolloError(getMessage('BOOK_NOT_FOUND'));
     }
 
-    const dataToUpdate = pick(data, allowedData);
-
-    await BookModel.update(dataToUpdate, { where: { id: data.id } });
+    await bookInstance.update(data, { returning: true });
 
     const response = {
       status: 'SUCCESS',
