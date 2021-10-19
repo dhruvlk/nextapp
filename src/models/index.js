@@ -6,6 +6,7 @@ const user = require('./user.model');
 const book = require('./book.model');
 const borrow = require('./borrow.model');
 const review = require('./review.model');
+const penalty = require('./penalty.model');
 const CONFIG = require('../../config/config');
 
 let sequelize;
@@ -47,6 +48,7 @@ user(sequelize, Sequelize.DataTypes);
 book(sequelize, Sequelize.DataTypes);
 borrow(sequelize, Sequelize.DataTypes);
 review(sequelize, Sequelize.DataTypes);
+penalty(sequelize, Sequelize.DataTypes);
 
 const { models } = sequelize;
 
