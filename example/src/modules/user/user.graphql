@@ -1,0 +1,91 @@
+directive @isAuthenticated on FIELD_DEFINITION
+directive @hasRole(roles: [String]) on FIELD_DEFINITION
+directive @isOwner(type: String) on FIELD_DEFINITION
+
+type Query {
+  user: User @isAuthenticated
+  users(filter: UserFilter!): UsersResponse 
+}
+
+type Mutation {
+  createUser(user: userInput!): CreateUpdateUserResponse 
+  login(data:loginData!):LoginResponse 
+  updateUser(id:ID, data: UserData): User @isAuthenticated  
+  updatePassword(data: passwordInput!): CreateUpdateUserResponse @isAuthenticated
+  verifyUser(data: VerifyInput!): CreateUpdateUserResponse
+  adminUpdate(data: AdminUpdateInput!): CreateUpdateUserResponse @hasRole(roles: ["ADMIN"])
+}
+
+type User {
+  id: ID!,
+  firstName: String
+  lastName: String
+  email: String
+  phoneNo: String
+  message: String
+}
+
+type UserListing {
+  id: ID!,
+  firstName: String
+  lastName: String
+  email: String
+  phoneNo: String
+  message: String
+}
+
+type CreateUpdateUserResponse {
+  message: String
+}
+
+type UsersResponse {
+  count: Int
+  users: [UserListing]
+}
+
+input userInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  phoneNo: String!
+}
+
+input loginData {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  token: String!
+  refreshToken: String
+  user: User
+}
+
+input UserFilter {
+  skip: Int
+  limit: Int
+  search: String
+  sortBy: String
+}
+
+input UserData {
+  firstName: String,
+  lastName: String,
+  phoneNo: String
+}
+
+input passwordInput {
+  password: String!
+}
+
+input VerifyInput{
+  id: Int!
+  token: String!,
+  password: String!
+}
+
+input AdminUpdateInput {
+  activate: Boolean!
+  userId: ID!
+}
